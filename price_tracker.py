@@ -1,6 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -42,12 +42,19 @@ def send_email(subject, body, to_email):
 def fetch_data():
     driver = None
     try:
-        firefox_options = Options()
-        firefox_options.add_argument("--headless")  # Run in headless mode
+        chrome_options = Options()
+        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Add this to avoid detection
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
 
-        # Initialize the Firefox WebDriver
-        driver = webdriver.Firefox(service=Service(r'C:\Users\Pavan\Downloads\geckodriver-v0.34.0-win64\geckodriver.exe'), options=firefox_options)
-        
+        # Specify the path to the Chrome binary and ChromeDriver executable
+        # Download ChromeDriver from: https://chromedriver.chromium.org/downloads
+        # Download Google Chrome from: https://www.google.com/chrome/
+        chrome_options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+        driver = webdriver.Chrome(service=Service(r'C:\Users\Pavan\Downloads\chromedriver-win64 (1)\chromedriver-win64\chromedriver.exe'), options=chrome_options)
+
         delay_time = 10  # Fixed delay time in seconds
 
         # Process a single product
