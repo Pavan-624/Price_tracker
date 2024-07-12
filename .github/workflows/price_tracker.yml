@@ -24,6 +24,13 @@ jobs:
         pip install selenium
         pip install beautifulsoup4
 
+    - name: Download and install geckodriver
+      run: |
+        GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r .tag_name)
+        wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+        tar -xzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+        sudo mv geckodriver /usr/local/bin/
+
     - name: Run price tracker
       env:
         FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
