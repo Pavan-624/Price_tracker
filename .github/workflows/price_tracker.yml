@@ -1,6 +1,5 @@
 name: Python application
 
-# Run the workflow on push and every half hour
 on:
   push:
   schedule:
