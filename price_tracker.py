@@ -1,5 +1,5 @@
+from dotenv import load_dotenv
 import os
-import mysql.connector
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -10,15 +10,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
 
+# Load environment variables from .env file
+dotenv_path = 'F:/pricetracker_project/variables.env'
+load_dotenv(dotenv_path=dotenv_path)
+
 # Fetch environment variables
 from_email = os.getenv('FROM_EMAIL')
 from_password = os.getenv('EMAIL_PASSWORD')
 to_email = os.getenv('TO_EMAIL')
-
-db_host = os.getenv('DB_HOST', '127.0.0.1')
-db_user = os.getenv('DB_USER', 'root')
-db_password = os.getenv('DB_PASSWORD')
-db_name = os.getenv('DB_NAME')
 
 # SMTP server configuration
 smtp_server = 'smtp.gmail.com'
@@ -46,44 +45,9 @@ def send_email(subject, body, to_email):
     except Exception as e:
         print(f"An error occurred while sending email: {e}")
 
-def setup_database():
-    try:
-        print(f"Connecting to database at {db_host} with user {db_user}")
-        mydb = mysql.connector.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            database=db_name
-        )
-        cursor = mydb.cursor()
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS product (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) UNIQUE,
-                price FLOAT
-            )
-        ''')
-        
-        mydb.commit()
-        cursor.close()
-        mydb.close()
-        print("Database setup complete.")
-    except mysql.connector.Error as err:
-        print(f"Database error: {err}")
-
 def fetch_data():
     driver = None
     try:
-        print(f"Connecting to database at {db_host} with user {db_user}")
-        mydb = mysql.connector.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            database=db_name
-        )
-        cursor = mydb.cursor()
-        
         chrome_options = Options()
         chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Add this to avoid detection
@@ -119,23 +83,9 @@ def fetch_data():
                     f'The price of {name} has dropped to {price}.',
                     to_email
                 )
-
-            # Update or insert the product record into the database
-            cursor.execute('''
-                INSERT INTO product (name, price)
-                VALUES (%s, %s)
-                ON DUPLICATE KEY UPDATE price = VALUES(price)
-            ''', (name, price))
-            print(f'Inserted/Updated product: {name} with price {price}')
-
-            mydb.commit()
         else:
             print("Price data not available.")
 
-        cursor.close()
-        mydb.close()
-    except mysql.connector.Error as err:
-        print(f"Database error: {err}")
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
@@ -143,5 +93,5 @@ def fetch_data():
             driver.quit()
 
 if __name__ == "__main__":
-    setup_database()
     fetch_data()
+#new main code
