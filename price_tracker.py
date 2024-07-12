@@ -15,8 +15,8 @@ from_email = os.getenv('FROM_EMAIL')
 from_password = os.getenv('EMAIL_PASSWORD')
 to_email = os.getenv('TO_EMAIL')
 
-db_host = os.getenv('DB_HOST')
-db_user = os.getenv('DB_USER')
+db_host = os.getenv('DB_HOST', '127.0.0.1')
+db_user = os.getenv('DB_USER', 'root')
 db_password = os.getenv('DB_PASSWORD')
 db_name = os.getenv('DB_NAME')
 
