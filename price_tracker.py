@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 import mysql.connector
 from selenium import webdriver
@@ -10,10 +9,6 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
-
-# Load environment variables from .env file
-dotenv_path = 'F:/pricetracker_project/variables.env'
-load_dotenv(dotenv_path=dotenv_path)
 
 # Fetch environment variables
 from_email = os.getenv('FROM_EMAIL')
