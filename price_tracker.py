@@ -60,7 +60,7 @@ def fetch_data():
         driver = webdriver.Firefox(service=service, options=firefox_options)
         
         delay_time = 10
-
+        print(f"Navigating to {product['url']}")
         driver.get(product["url"])
         time.sleep(delay_time)
 
