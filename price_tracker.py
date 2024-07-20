@@ -46,6 +46,11 @@ def send_email(subject, body, to_email):
     except Exception as e:
         print(f"An error occurred while sending email: {e}")
 
+def send_test_email():
+    subject = 'Test Email'
+    body = 'This is a test email to verify the email functionality.'
+    send_email(subject, body, to_email)
+
 def fetch_data():
     driver = None
     try:
@@ -103,4 +108,7 @@ def fetch_data():
             driver.quit()
 
 if __name__ == "__main__":
+    # Uncomment the line below to send a test email
+    # send_test_email()
+    
     fetch_data()
