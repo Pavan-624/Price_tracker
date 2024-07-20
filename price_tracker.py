@@ -1,14 +1,14 @@
 import os
 import json
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import time
 
 # Load environment variables
@@ -28,7 +28,8 @@ smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 
 product = {
-    "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6"
+    "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6",
+    "threshold": 150000.0
 }
 
 def send_email(subject, body, to_email):
@@ -37,7 +38,7 @@ def send_email(subject, body, to_email):
     msg['To'] = to_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
-    
+
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
@@ -80,10 +81,23 @@ def fetch_data():
         product_price = price_element.text.strip().replace(',', '')
         print(f"Product Price: {product_price}")
 
-        # Send email with product details
-        email_subject = 'Product Details'
-        email_body = f"Product Title: {product_title}\nProduct Price: {product_price}"
-        send_email(email_subject, email_body, to_email)
+        if product_price != 'N/A':
+            try:
+                product_price = float(product_price)
+                print(f"Fetched Price: {product_price}")
+
+                if product_price <= product["threshold"]:
+                    print(f'Price is below threshold for {product_title}: {product_price}')
+                    # Send email notification
+                    send_email(
+                        'Price Drop Alert!',
+                        f'The price of {product_title} has dropped to {product_price}.',
+                        to_email
+                    )
+            except ValueError:
+                print("Failed to convert price to float.")
+        else:
+            print("Price data not available.")
 
     except Exception as e:
         print(f"An error occurred: {e}")
