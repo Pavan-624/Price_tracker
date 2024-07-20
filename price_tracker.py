@@ -67,11 +67,12 @@ def fetch_data():
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, 'html.parser')
 
-        name_tag = soup.find('span', class_='a-size-large product-title-word-break')
+        # Update CSS selectors based on current HTML structure
+        name_tag = soup.find('span', {'id': 'productTitle'})
         name = name_tag.text.strip() if name_tag else 'N/A'
         print(f"Product Name: {name}")
 
-        price_tag = soup.find('span', class_='a-price-whole')
+        price_tag = soup.find('span', {'id': 'priceblock_ourprice'})
         price = price_tag.text.strip().replace(',', '') if price_tag else 'N/A'
         print(f"Product Price: {price}")
 
@@ -81,11 +82,14 @@ def fetch_data():
 
             if price <= product["threshold"]:
                 print(f'Price is below threshold for {name}: {price}')
-                send_email(
-                    'Price Drop Alert!',
-                    f'The price of {name} has dropped to {price}.',
-                    to_email
-                )
+                try:
+                    send_email(
+                        'Price Drop Alert!',
+                        f'The price of {name} has dropped to {price}.',
+                        to_email
+                    )
+                except Exception as e:
+                    print(f"Failed to send email: {e}")
         else:
             print("Price data not available.")
 
