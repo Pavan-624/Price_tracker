@@ -67,29 +67,33 @@ def fetch_data():
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, 'html.parser')
 
-        # Update CSS selectors based on current HTML structure
+        # Fetch the product name
         name_tag = soup.find('span', {'id': 'productTitle'})
         name = name_tag.text.strip() if name_tag else 'N/A'
         print(f"Product Name: {name}")
 
-        price_tag = soup.find('span', {'id': 'priceblock_ourprice'})
+        # Fetch the product price
+        price_tag = soup.find('span', class_='a-price-whole')
         price = price_tag.text.strip().replace(',', '') if price_tag else 'N/A'
         print(f"Product Price: {price}")
 
         if price != 'N/A':
-            price = float(price)
-            print(f"Fetched Price: {price}")
+            try:
+                price = float(price)
+                print(f"Fetched Price: {price}")
 
-            if price <= product["threshold"]:
-                print(f'Price is below threshold for {name}: {price}')
-                try:
-                    send_email(
-                        'Price Drop Alert!',
-                        f'The price of {name} has dropped to {price}.',
-                        to_email
-                    )
-                except Exception as e:
-                    print(f"Failed to send email: {e}")
+                if price <= product["threshold"]:
+                    print(f'Price is below threshold for {name}: {price}')
+                    try:
+                        send_email(
+                            'Price Drop Alert!',
+                            f'The price of {name} has dropped to {price}.',
+                            to_email
+                        )
+                    except Exception as e:
+                        print(f"Failed to send email: {e}")
+            except ValueError:
+                print("Failed to convert price to float.")
         else:
             print("Price data not available.")
 
