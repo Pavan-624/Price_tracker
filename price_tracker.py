@@ -68,7 +68,7 @@ def fetch_data():
         soup = BeautifulSoup(page_source, 'html.parser')
 
         # Fetch the product name
-        name_tag = soup.find('span', {'id': 'productTitle'})
+        name_tag = soup.find('span', class_='a-size-large product-title-word-break')
         name = name_tag.text.strip() if name_tag else 'N/A'
         print(f"Product Name: {name}")
 
