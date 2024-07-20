@@ -42,7 +42,7 @@ def fetch_data():
 
         # Wait for the product title element to be present and fetch it
         title_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, 'productTitle'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '.a-size-large.product-title-word-break'))
         )
         product_title = title_element.text.strip()
         print(f"Product Title: {product_title}")
