@@ -47,6 +47,13 @@ def fetch_data():
         product_title = title_element.text.strip()
         print(f"Product Title: {product_title}")
 
+        # Wait for the product price element to be present and fetch it
+        price_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '.a-price-whole'))
+        )
+        product_price = price_element.text.strip().replace(',', '')
+        print(f"Product Price: {product_price}")
+
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
