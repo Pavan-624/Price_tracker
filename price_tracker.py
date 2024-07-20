@@ -102,10 +102,14 @@ def fetch_data():
             print("Price data not available.")
 
     except Exception as e:
+        import traceback
         print(f"An error occurred: {e}")
+        traceback.print_exc()  # This will print the full stack trace
+
     finally:
         if driver:
             driver.quit()
+
 
 if __name__ == "__main__":
     fetch_data()
