@@ -3,9 +3,6 @@ import json
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # Load environment variables
@@ -18,8 +15,7 @@ else:
     raise ValueError("ENV_DATA is not set or empty")
 
 product = {
-    "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6",
-    "threshold": 141489.0
+    "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6"
 }
 
 def fetch_data():
@@ -41,14 +37,9 @@ def fetch_data():
         driver.get(product["url"])
         time.sleep(delay_time)
 
-        # Wait for price elements to be present
-        price_elements = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.a-price-whole'))
-        )
-
-        # Example: Print text of each price element
-        for element in price_elements:
-            print(element.text)
+        # Get the title of the page
+        page_title = driver.title
+        print(f"Page Title: {page_title}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
