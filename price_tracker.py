@@ -1,5 +1,8 @@
 import os
 import json
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
@@ -17,9 +20,32 @@ if env_data:
 else:
     raise ValueError("ENV_DATA is not set or empty")
 
+from_email = env_vars.get('FROM_EMAIL', '')
+from_password = env_vars.get('EMAIL_PASSWORD', '')
+to_email = env_vars.get('TO_EMAIL', '')
+
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587
+
 product = {
     "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6"
 }
+
+def send_email(subject, body, to_email):
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(from_email, from_password)
+            server.send_message(msg)
+            print(f"Email sent to {to_email}")
+    except Exception as e:
+        print(f"An error occurred while sending email: {e}")
 
 def fetch_data():
     driver = None
@@ -53,6 +79,11 @@ def fetch_data():
         )
         product_price = price_element.text.strip().replace(',', '')
         print(f"Product Price: {product_price}")
+
+        # Send email with product details
+        email_subject = 'Product Details'
+        email_body = f"Product Title: {product_title}\nProduct Price: {product_price}"
+        send_email(email_subject, email_body, to_email)
 
     except Exception as e:
         print(f"An error occurred: {e}")
