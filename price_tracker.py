@@ -29,7 +29,7 @@ smtp_port = 587
 
 product = {
     "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6",
-    "threshold": 150000.0
+    "threshold": 14990.0
 }
 
 def send_email(subject, body, to_email):
