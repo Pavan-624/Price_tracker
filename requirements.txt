@@ -1,4 +1,11 @@
-selenium
 webdriver-manager
 beautifulsoup4
-
+streamlit
+Flask==2.3.0
+Flask-SQLAlchemy==2.5.1
+Flask-Login==0.6.2
+python-dotenv==1.0.0
+selenium==4.8.2
+python-dotenv==1.0.0
+werkzeug==2.3.0
+SQLAlchemy==1.4.47

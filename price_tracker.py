@@ -6,31 +6,23 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
+from bs4 import BeautifulSoup
 
-# Load environment variables
-env_data = os.getenv('ENV_DATA')
 
-if env_data:
-    env_vars = json.loads(env_data)
-    print("Loaded environment variables")
-else:
-    raise ValueError("ENV_DATA is not set or empty")
+# Load environment variables from variables.env file
+dotenv_path = 'F:/pricetracker_project/variables.env'
+load_dotenv(dotenv_path=dotenv_path)
 
-from_email = env_vars.get('FROM_EMAIL', '')
-from_password = env_vars.get('EMAIL_PASSWORD', '')
-to_email = env_vars.get('TO_EMAIL', '')
+from_email = os.getenv('FROM_EMAIL', '')
+from_password = os.getenv('EMAIL_PASSWORD', '')
 
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-
-product = {
-    "url": "https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6",
-    "threshold": 14990.0
-}
 
 def send_email(subject, body, to_email):
     msg = MIMEMultipart()
@@ -48,37 +40,38 @@ def send_email(subject, body, to_email):
     except Exception as e:
         print(f"An error occurred while sending email: {e}")
 
-def fetch_data():
+def fetch_data(product_url, threshold_value, recipient_email):
+    print(f"Fetching data for {product_url} with threshold {threshold_value} and email {recipient_email}")
     driver = None
     try:
         firefox_options = Options()
         firefox_options.add_argument("--headless")
 
         # Define path for GeckoDriver
-        geckodriver_path = '/snap/bin/geckodriver'
+        geckodriver_path = r'C:\Users\Pavan\Downloads\geckodriver-v0.34.0-win64\geckodriver.exe'
         service = Service(geckodriver_path)
 
         # Initialize the Firefox WebDriver
         driver = webdriver.Firefox(service=service, options=firefox_options)
         
-        delay_time = 10
+        delay_time = 15  # Increase delay time for debugging
 
-        print(f"Navigating to {product['url']}")
-        driver.get(product["url"])
-        time.sleep(delay_time)
+        print(f"Navigating to {product_url}")
+        driver.get(product_url)
+        time.sleep(delay_time)  # Wait for the page to load
 
-        # Wait for the product title element to be present and fetch it
-        title_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '.a-size-large.product-title-word-break'))
-        )
-        product_title = title_element.text.strip()
+        # Get page source
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+
+        # Extract product title
+        name_tag = soup.find('span', class_='a-size-large product-title-word-break')
+        product_title = name_tag.text.strip() if name_tag else 'N/A'
         print(f"Product Title: {product_title}")
 
-        # Wait for the product price element to be present and fetch it
-        price_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '.a-price-whole'))
-        )
-        product_price = price_element.text.strip().replace(',', '')
+        # Extract product price
+        price_tag = soup.find('span', class_='a-price-whole')
+        product_price = price_tag.text.strip().replace(',', '') if price_tag else 'N/A'
         print(f"Product Price: {product_price}")
 
         if product_price != 'N/A':
@@ -86,18 +79,18 @@ def fetch_data():
                 product_price = float(product_price)
                 print(f"Fetched Price: {product_price}")
 
-                if product_price <= product["threshold"]:
+                if product_price <= threshold_value:
                     print(f'Price is below threshold for {product_title}: {product_price}')
                     # Send email notification
                     send_email(
                         'Price Drop Alert!',
                         f'The price of {product_title} has dropped to {product_price}.',
-                        to_email
+                        recipient_email
                     )
             except ValueError:
                 print("Failed to convert price to float.")
         else:
-            print("Price data not available.")
+            print("Price data not available or empty.")
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -105,5 +98,7 @@ def fetch_data():
         if driver:
             driver.quit()
 
+
 if __name__ == "__main__":
-    fetch_data()
+    # Example usage
+    fetch_data('https://www.amazon.in/Fossil-Analog-Black-Unisex-Watch/dp/B005LBZ6G6', 150000.0, 'pavanthatikonda235@gmail.com')
