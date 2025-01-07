@@ -1,115 +1,86 @@
+💰 Price Tracker System Using Python and Selenium
+A Python-based Price Tracker System that monitors product prices on e-commerce websites, compares them against user-defined thresholds, and sends email notifications for price drops. The system leverages web scraping, automation, and Flask for seamless user interaction.
 
-🎥 Movie Recommender System Using Machine Learning
-A Python-based Movie Recommender System leveraging machine learning to provide personalized movie suggestions. The system uses the cosine similarity algorithm to calculate the similarity between movies and generate recommendations based on user preferences.
-
-📜Table of Contents
+📜 Table of Contents
 Abstract
-
 Project Overview
-
 Features
-
 Technologies Used
-
 Workflow
-
 Advantages and Disadvantages
-
 Deployment
-
 Future Enhancements
-
 Contributors
-
 📝 Abstract
-The Movie Recommender System is designed to suggest movies based on user preferences. Using the cosine similarity algorithm, the system calculates similarity scores between movie vectors and generates recommendations. The project covers:
+The Price Tracker System is designed to track prices of products on e-commerce platforms like Amazon. Users provide product URLs and desired price thresholds. The system continuously monitors these products and sends email alerts when prices drop below the specified thresholds. Key highlights include:
 
-Data Collection and Preprocessing: Preparing and cleaning data for analysis.
-
-Feature Extraction and Vectorization: Transforming movie attributes into vectors.
-
-Similarity Calculation: Identifying similar movies based on user preferences.
-
-Web Integration: Deploying a user-friendly interface for interaction.
-
+Data Collection and Parsing: Automated scraping of product details and prices.
+Threshold Monitoring: Real-time price comparison against user-defined thresholds.
+Notification System: Email alerts for price drops.
+User-Friendly Web Interface: Interactive platform to manage tracked products.
 🌟 Project Overview
-Recommender systems are widely used across industries like e-commerce and OTT platforms to enhance user experiences.
+The Price Tracker System addresses the challenge of monitoring fluctuating product prices on e-commerce websites. It allows users to save time by automating price tracking and notification processes.
 
-Content-Based Filtering: Analyzes movie attributes (genre, director, actors) for recommendations.
-
-Collaborative Filtering: Suggests movies by examining user-to-user and item-to-item relationships.
-
-Hybrid Filtering: Combines both approaches for better accuracy. This project demonstrates the practical implementation of these techniques with a focus on cosine similarity.
-
+Automated Scraping: Extracts product details using Selenium.
+Dynamic Thresholding: Tracks multiple products with individual thresholds.
+Interactive Web Interface: Enables user registration, login, and management of tracking preferences.
 🚀 Features
-Data Preprocessing: Cleans and prepares datasets for analysis.
-
-Vectorization: Transforms movie data into vectors for similarity measurement.
-
-Cosine Similarity Algorithm: Calculates the angle between vectors to measure similarity.
-
-Top 5 Recommendations: Suggests the most similar movies based on user input.
-
-Web-Based Interface: Simplifies user interactions with a friendly UI.
-
+Automated Product Tracking: Fetches product details and prices from e-commerce platforms.
+Price Comparison: Monitors product prices against user-defined thresholds.
+Email Notifications: Sends alerts when prices drop below thresholds.
+Web-Based Interface: Allows users to manage products and preferences easily.
+Admin Controls: Enables admins to manage user accounts and system settings.
 🛠️ Technologies Used
 Programming Language: Python
-
-Libraries: pandas, numpy, scikit-learn
-
-Algorithm: Cosine Similarity
-
-Deployment Framework: Flask
-
+Libraries: Selenium, Flask, pandas, numpy, dotenv
+Database: SQLite
+Email Service: SMTP with Gmail
 📈 Workflow
-Data Preprocessing: Collect movie datasets from APIs or CSV files.
+Data Collection
+Users provide product links and thresholds via the web interface. Selenium scrapes product details and prices from the URL.
 
-Handle missing values, duplicates, and format inconsistencies.
+Data Processing
+Extract product attributes like title, price, and availability. Compare scraped prices with user-defined thresholds.
 
-Feature Extraction and Vectorization: Extract attributes like genre, ratings, and cast. Convert them into feature vectors.
+Notification System
+Trigger email alerts for price drops below thresholds.
 
-Cosine Similarity Implementation: Compute similarity scores between movie vectors. Identify top recommendations based on similarity.
+Web Integration
+Flask-based interface for user registration, login, and product management.
 
-5.Web Deployment: Develop a Flask-based web interface for user interaction.
+Admin Controls
+Admin can manage user accounts and update system settings (e.g., CSS selectors).
 
 ✔️ Advantages and Disadvantages
 Advantages
 
-Efficiency: Handles high-dimensional and sparse data effectively.
-
-Personalization: Delivers user-specific recommendations.
-
-Simplicity: Easy to implement and interpret.
-
+Automation: Eliminates the need for manual price checking.
+User-Centric: Tailored notifications for each user.
+Scalable: Handles multiple products and users simultaneously.
 Disadvantages
 
-Data Dependency: Requires high-quality datasets for accuracy.
-
-No Negative Correlations: Does not account for negative attribute relationships.
-
-Vector Length Bias: Can be influenced by vector magnitude.
-
+Platform Dependency: Depends on stable HTML structure of e-commerce websites.
+Data Accuracy: Scraping errors may occur if website layouts change.
+Limited API Use: Fully dynamic platforms may limit scraping capabilities.
 🖥️ Deployment
 Prerequisites
 
 Python 3.x installed on your system.
-
-Required libraries installed (pandas, numpy, scikit-learn, Flask).
-
+Required libraries installed (selenium, flask, etc.).
+Browser driver (e.g., GeckoDriver) configured for Selenium.
 Steps to Run Locally
 
 Clone the repository:
- git clone https://github.com/your-username/movie-recommender-system.git  
- cd movie-recommender-system 
+ git clone https://github.com/your-username/price-tracker.git  
+cd price-tracker   
 Install dependencies:
  pip install -r requirements.txt  
+ 
 Start the application:
 python app.py  
 📋Future Enhancements
-Integrate real-time data from APIs for dynamic recommendations.
-
-Implement deep learning models for enhanced accuracy.
-
-Add feedback mechanisms to improve recommendation quality.
-
-Introduce user authentication for personalized experiences.
+Dynamic Website Support: Integrate support for JavaScript-heavy websites.
+API Integration: Fetch real-time data from e-commerce APIs.
+Mobile App: Develop a mobile application for on-the-go tracking.
+Enhanced Analytics: Provide insights into price trends for tracked products.
+User Feedback System: Allow users to provide feedback for improved recommendations.
